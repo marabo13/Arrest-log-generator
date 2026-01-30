@@ -7,13 +7,11 @@
 
 <style>
 :root{
-  --bg:#0a0212;
   --panel:#140624;
   --border:rgba(255,255,255,.16);
   --text:#f7f2ff;
   --muted:#cdb7ff;
   --accent:#a66bff;
-  --danger:#ff6b8a;
 }
 
 *{box-sizing:border-box}
@@ -31,7 +29,7 @@ body{
   padding:24px 16px 32px;
 }
 
-h1{margin:0 0 6px;font-size:22px}
+h1{font-size:22px;margin:0 0 6px}
 .subtitle{color:var(--muted);font-size:14px;margin-bottom:18px}
 
 .grid{
@@ -52,12 +50,11 @@ h1{margin:0 0 6px;font-size:22px}
   border-bottom:1px solid var(--border);
   font-weight:800;
   font-size:13px;
-  letter-spacing:.4px;
 }
 
 .panelBody{padding:14px}
 
-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
 
 input, textarea, select{
   width:100%;
@@ -68,7 +65,7 @@ input, textarea, select{
   color:var(--text);
 }
 
-textarea{min-height:90px;resize:vertical}
+textarea{min-height:90px}
 
 .two{
   display:grid;
@@ -77,13 +74,8 @@ textarea{min-height:90px;resize:vertical}
 }
 @media(max-width:520px){.two{grid-template-columns:1fr}}
 
-.section{
-  margin-top:14px;
-  padding-top:14px;
-  border-top:1px dashed rgba(255,255,255,.2);
-}
+.section{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.2)}
 
-/* CHECKBOX */
 .checkbox{
   appearance:none;
   width:18px;height:18px;
@@ -103,59 +95,23 @@ textarea{min-height:90px;resize:vertical}
   font-weight:900;
 }
 
-/* TIERS */
 .tiers{
   display:flex;gap:12px;flex-wrap:wrap;
   padding:10px;border-radius:12px;
   border:1px solid var(--border);
   background:#0b0114;
 }
-.tiers label{display:flex;align-items:center;gap:8px;font-size:13px}
 
-/* LAWS */
-.lawsScroll{max-height:420px;overflow:auto;padding-right:6px}
-details{
-  border:1px solid var(--border);
-  border-radius:14px;
-  margin-bottom:10px;
-  background:#0b0114;
-}
-summary{
-  cursor:pointer;
-  padding:10px 12px;
-  font-weight:800;
-  font-size:13px;
-}
-.lawRow{
-  display:flex;gap:10px;
-  padding:10px;
-  border-top:1px solid rgba(255,255,255,.1);
-}
-.lawText b{display:block}
-.lawText span{font-size:12px;color:var(--muted)}
+.lawsScroll{max-height:420px;overflow:auto}
+details{border:1px solid var(--border);border-radius:14px;margin-bottom:10px}
+summary{padding:10px 12px;font-weight:800;cursor:pointer}
+.lawRow{display:flex;gap:10px;padding:10px;border-top:1px solid rgba(255,255,255,.1)}
 
-/* BUTTONS */
 .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
-button{
-  padding:10px 14px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#1f0b3a;
-  color:var(--text);
-  font-weight:800;
-  cursor:pointer;
-}
-button.primary{background:#3a1b6d}
-button.danger{background:#4a1425}
+button{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:#1f0b3a;color:#fff;font-weight:800}
 
-/* OUTPUT */
-.output{
-  min-height:320px;
-  font-family:monospace;
-  background:#0b0114;
-}
+.output{min-height:320px;font-family:monospace}
 
-/* COPY TOAST */
 #copyToast{
   position:fixed;
   bottom:20px;
@@ -168,29 +124,22 @@ button.danger{background:#4a1425}
   font-size:13px;
   font-weight:800;
   opacity:0;
-  pointer-events:none;
-  transition:opacity .25s ease, transform .25s ease;
-  border:1px solid rgba(255,255,255,.25);
+  transition:.25s;
 }
-#copyToast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(-6px);
-}
+#copyToast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
 </style>
 </head>
 
 <body>
 <div class="container">
   <h1>Arrest Log Generator</h1>
-  <div class="subtitle">Fill in details, select laws, generate arrest log.</div>
+  <div class="subtitle">Generate clean arrest logs.</div>
 
   <div class="grid">
-    <!-- LEFT -->
     <div class="panel">
       <div class="panelHeader">Arrest Details</div>
       <div class="panelBody">
 
-        <!-- ARRESTER -->
         <div class="two">
           <div>
             <label>Arrester’s Username</label>
@@ -213,11 +162,11 @@ button.danger{background:#4a1425}
         <div class="section">
           <div class="two">
             <div>
-              <label>Offender Username</label>
+              <label>Offender’s Username</label>
               <input id="username">
             </div>
             <div>
-              <label>Offender Rank</label>
+              <label>Offender’s Rank</label>
               <select id="rank">
                 <option value="">-- Select rank --</option>
                 <option>Sith Potential</option>
@@ -257,22 +206,19 @@ button.danger{background:#4a1425}
         <div class="section">
           <label>Summary of Event</label>
           <textarea id="summary"></textarea>
-
           <label>Evidence</label>
           <textarea id="evidence"></textarea>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT -->
     <div class="panel">
       <div class="panelHeader">Generated Arrest Log</div>
       <div class="panelBody">
         <textarea id="output" class="output" readonly></textarea>
         <div class="actions">
-          <button class="primary" onclick="generate()">Generate</button>
+          <button onclick="generate()">Generate</button>
           <button onclick="copyText()">Copy</button>
-          <button class="danger" onclick="resetAll()">Reset</button>
         </div>
       </div>
     </div>
@@ -283,52 +229,44 @@ button.danger{background:#4a1425}
 
 <script>
 const lawsData={
- "Article II: Code of Power":[["P-01","Contempt of Superiors"],["P-02","Insubordination"],["P-03","Illegitimate Usurpation"],["P-04","Abuse of Authority"],["P-05","Violation of Sith Regalia"]],
- "Article III: Code of Secrecy":[["S-01","Divulgence of Council Secrets"],["S-02","Grand Deception"],["S-03","Unauthorized Access"],["S-04","Treason"]],
- "Article IV: Code of Conflict":[["C-01","Cowardice"],["C-02","Fraternization with Enemies"],["C-03","Unsanctioned Fratricide"],["C-04","Disruption"],["C-05","Obstruction of Guard Operations"]],
- "Article V: Code of Order":[["O-01","Major Toxicity"],["O-02","Exploitation"],["O-03","Misuse of Enforcement Commands"],["O-04","Alternative Accounts"]]
+ "Article II: Code of Power":[["P-01","Contempt of Superiors"],["P-02","Insubordination"]],
+ "Article III: Code of Secrecy":[["S-01","Divulgence of Council Secrets"]],
 };
 
 const lawsEl=document.getElementById("laws");
-for(const group in lawsData){
-  const d=document.createElement("details"); d.open=true;
-  const s=document.createElement("summary"); s.textContent=group; d.appendChild(s);
-  lawsData[group].forEach(l=>{
-    const row=document.createElement("label");
-    row.className="lawRow";
-    row.innerHTML=`<input type="checkbox" class="checkbox lawCheck" value="${l[0]}: ${l[1]}">
-                   <div class="lawText"><b>${l[0]}</b><span>${l[1]}</span></div>`;
-    d.appendChild(row);
-  });
-  lawsEl.appendChild(d);
+for(const g in lawsData){
+ const d=document.createElement("details");d.open=true;
+ const s=document.createElement("summary");s.textContent=g;d.appendChild(s);
+ lawsData[g].forEach(l=>{
+  d.innerHTML+=`<label class="lawRow"><input type="checkbox" class="checkbox lawCheck" value="${l[0]}: ${l[1]}"> ${l[0]} – ${l[1]}</label>`;
+ });
+ lawsEl.appendChild(d);
 }
 
-const today=new Date();
-date.value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+date.value=new Date().toISOString().split("T")[0];
 
 function generate(){
  const tiers=[...document.querySelectorAll(".tier:checked")].map(t=>t.value).join(", ");
  const laws=[...document.querySelectorAll(".lawCheck:checked")].map(l=>l.value).join("; ");
  output.value=
-`Arrester’s username: ${arrester.value}
-Arrester’s DCoJ rank: ${arresterRank.value}
+`Arrester’s Username: ${arrester.value}
+Arrester’s DCoJ Rank: ${arresterRank.value}
 
-Offender username: ${username.value}
-Offender rank: ${rank.value}
-Date of the event: ${date.value}
-Law(s) broken: ${laws}
+Offender’s Username: ${username.value}
+Offender’s Rank: ${rank.value}
+Date of the Event: ${date.value}
+Law(s) Broken: ${laws}
 Tier(s): ${tiers}
-Summary of event: ${summary.value}
+Summary of Event: ${summary.value}
 Evidence: ${evidence.value}`;
 }
 
 function copyText(){
-  navigator.clipboard.writeText(output.value);
-  const toast=document.getElementById("copyToast");
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"),1200);
+ navigator.clipboard.writeText(output.value);
+ const t=document.getElementById("copyToast");
+ t.classList.add("show");
+ setTimeout(()=>t.classList.remove("show"),1200);
 }
-function resetAll(){location.reload();}
 </script>
 </body>
 </html>
