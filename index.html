@@ -31,24 +31,15 @@ body{
   padding:24px 16px 32px;
 }
 
-h1{
-  margin:0 0 6px;
-  font-size:22px;
-}
-.subtitle{
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:18px;
-}
+h1{margin:0 0 6px;font-size:22px}
+.subtitle{color:var(--muted);font-size:14px;margin-bottom:18px}
 
 .grid{
   display:grid;
   grid-template-columns:1.1fr .9fr;
   gap:14px;
 }
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr}
-}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
 
 .panel{
   background:var(--panel);
@@ -64,16 +55,9 @@ h1{
   letter-spacing:.4px;
 }
 
-.panelBody{
-  padding:14px;
-}
+.panelBody{padding:14px}
 
-label{
-  display:block;
-  font-size:12px;
-  color:var(--muted);
-  margin-bottom:6px;
-}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 
 input, textarea, select{
   width:100%;
@@ -84,19 +68,14 @@ input, textarea, select{
   color:var(--text);
 }
 
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
+textarea{min-height:90px;resize:vertical}
 
 .two{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
 }
-@media(max-width:520px){
-  .two{grid-template-columns:1fr}
-}
+@media(max-width:520px){.two{grid-template-columns:1fr}}
 
 .section{
   margin-top:14px;
@@ -107,8 +86,7 @@ textarea{
 /* CHECKBOX */
 .checkbox{
   appearance:none;
-  width:18px;
-  height:18px;
+  width:18px;height:18px;
   border-radius:5px;
   border:2px solid var(--accent);
   background:#0b0114;
@@ -121,34 +99,21 @@ textarea{
   position:absolute;
   color:#12001f;
   font-size:14px;
-  left:3px;
-  top:-1px;
+  left:3px;top:-1px;
   font-weight:900;
 }
 
 /* TIERS */
 .tiers{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  padding:10px;
-  border-radius:12px;
+  display:flex;gap:12px;flex-wrap:wrap;
+  padding:10px;border-radius:12px;
   border:1px solid var(--border);
   background:#0b0114;
 }
-.tiers label{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:13px;
-}
+.tiers label{display:flex;align-items:center;gap:8px;font-size:13px}
 
 /* LAWS */
-.lawsScroll{
-  max-height:420px;
-  overflow:auto;
-  padding-right:6px;
-}
+.lawsScroll{max-height:420px;overflow:auto;padding-right:6px}
 details{
   border:1px solid var(--border);
   border-radius:14px;
@@ -162,8 +127,7 @@ summary{
   font-size:13px;
 }
 .lawRow{
-  display:flex;
-  gap:10px;
+  display:flex;gap:10px;
   padding:10px;
   border-top:1px solid rgba(255,255,255,.1);
 }
@@ -171,12 +135,7 @@ summary{
 .lawText span{font-size:12px;color:var(--muted)}
 
 /* BUTTONS */
-.actions{
-  display:flex;
-  gap:10px;
-  justify-content:flex-end;
-  margin-top:10px;
-}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
 button{
   padding:10px 14px;
   border-radius:12px;
@@ -231,6 +190,7 @@ button.danger{background:#4a1425}
       <div class="panelHeader">Arrest Details</div>
       <div class="panelBody">
 
+        <!-- ARRESTER -->
         <div class="two">
           <div>
             <label>Arrester’s Username</label>
@@ -238,7 +198,15 @@ button.danger{background:#4a1425}
           </div>
           <div>
             <label>Arrester’s DCoJ Rank</label>
-            <input id="arresterRank">
+            <select id="arresterRank">
+              <option value="">-- Select CO rank --</option>
+              <option>Arbiter</option>
+              <option>Quaestor</option>
+              <option>Praetor</option>
+              <option>Sanctor</option>
+              <option>Ast. Chief Arbiter</option>
+              <option>Chief Arbiter</option>
+            </select>
           </div>
         </div>
 
@@ -248,7 +216,6 @@ button.danger{background:#4a1425}
               <label>Offender Username</label>
               <input id="username">
             </div>
-
             <div>
               <label>Offender Rank</label>
               <select id="rank">
@@ -271,7 +238,6 @@ button.danger{background:#4a1425}
               <label>Date of Event</label>
               <input type="date" id="date">
             </div>
-
             <div>
               <label>Tier(s)</label>
               <div class="tiers">
@@ -317,48 +283,21 @@ button.danger{background:#4a1425}
 
 <script>
 const lawsData={
- "Article II: Code of Power":[
-  ["P-01","Contempt of Superiors"],
-  ["P-02","Insubordination"],
-  ["P-03","Illegitimate Usurpation"],
-  ["P-04","Abuse of Authority"],
-  ["P-05","Violation of Sith Regalia"]
- ],
- "Article III: Code of Secrecy":[
-  ["S-01","Divulgence of Council Secrets"],
-  ["S-02","Grand Deception"],
-  ["S-03","Unauthorized Access"],
-  ["S-04","Treason"]
- ],
- "Article IV: Code of Conflict":[
-  ["C-01","Cowardice"],
-  ["C-02","Fraternization with Enemies"],
-  ["C-03","Unsanctioned Fratricide"],
-  ["C-04","Disruption"],
-  ["C-05","Obstruction of Guard Operations"]
- ],
- "Article V: Code of Order":[
-  ["O-01","Major Toxicity"],
-  ["O-02","Exploitation"],
-  ["O-03","Misuse of Enforcement Commands"],
-  ["O-04","Alternative Accounts"]
- ]
+ "Article II: Code of Power":[["P-01","Contempt of Superiors"],["P-02","Insubordination"],["P-03","Illegitimate Usurpation"],["P-04","Abuse of Authority"],["P-05","Violation of Sith Regalia"]],
+ "Article III: Code of Secrecy":[["S-01","Divulgence of Council Secrets"],["S-02","Grand Deception"],["S-03","Unauthorized Access"],["S-04","Treason"]],
+ "Article IV: Code of Conflict":[["C-01","Cowardice"],["C-02","Fraternization with Enemies"],["C-03","Unsanctioned Fratricide"],["C-04","Disruption"],["C-05","Obstruction of Guard Operations"]],
+ "Article V: Code of Order":[["O-01","Major Toxicity"],["O-02","Exploitation"],["O-03","Misuse of Enforcement Commands"],["O-04","Alternative Accounts"]]
 };
 
 const lawsEl=document.getElementById("laws");
 for(const group in lawsData){
-  const d=document.createElement("details");
-  d.open=true;
-  const s=document.createElement("summary");
-  s.textContent=group;
-  d.appendChild(s);
-
+  const d=document.createElement("details"); d.open=true;
+  const s=document.createElement("summary"); s.textContent=group; d.appendChild(s);
   lawsData[group].forEach(l=>{
     const row=document.createElement("label");
     row.className="lawRow";
-    row.innerHTML=
-      `<input type="checkbox" class="checkbox lawCheck" value="${l[0]}: ${l[1]}">
-       <div class="lawText"><b>${l[0]}</b><span>${l[1]}</span></div>`;
+    row.innerHTML=`<input type="checkbox" class="checkbox lawCheck" value="${l[0]}: ${l[1]}">
+                   <div class="lawText"><b>${l[0]}</b><span>${l[1]}</span></div>`;
     d.appendChild(row);
   });
   lawsEl.appendChild(d);
@@ -389,7 +328,6 @@ function copyText(){
   toast.classList.add("show");
   setTimeout(()=>toast.classList.remove("show"),1200);
 }
-
 function resetAll(){location.reload();}
 </script>
 </body>
