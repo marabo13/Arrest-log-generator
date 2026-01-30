@@ -195,6 +195,28 @@ button.danger{background:#4a1425}
   font-family:monospace;
   background:#0b0114;
 }
+
+/* COPY TOAST */
+#copyToast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#2e115a;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  border:1px solid rgba(255,255,255,.25);
+}
+#copyToast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(-6px);
+}
 </style>
 </head>
 
@@ -209,7 +231,6 @@ button.danger{background:#4a1425}
       <div class="panelHeader">Arrest Details</div>
       <div class="panelBody">
 
-        <!-- ARRESTER INFO -->
         <div class="two">
           <div>
             <label>Arrester’s Username</label>
@@ -292,6 +313,8 @@ button.danger{background:#4a1425}
   </div>
 </div>
 
+<div id="copyToast">Copy successful</div>
+
 <script>
 const lawsData={
  "Article II: Code of Power":[
@@ -359,7 +382,14 @@ Tier(s): ${tiers}
 Summary of event: ${summary.value}
 Evidence: ${evidence.value}`;
 }
-function copyText(){navigator.clipboard.writeText(output.value);}
+
+function copyText(){
+  navigator.clipboard.writeText(output.value);
+  const toast=document.getElementById("copyToast");
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"),1200);
+}
+
 function resetAll(){location.reload();}
 </script>
 </body>
