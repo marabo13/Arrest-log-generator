@@ -3,703 +3,281 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Arrest Log Generator</title>
+<title>DCoJ Arrest Log Generator</title>
 
 <style>
-  :root{
-    --bg:#0b0214;
-    --panel:rgba(255,255,255,.06);
-    --panel2:rgba(255,255,255,.04);
-    --border:rgba(255,255,255,.15);
-    --text:#f7f2ff;
-    --muted:#cdb7ff;
-    --accent:#6b5cff;
-    --good:#2ecc71;
-    --warn:#ffd36f;
-    --shadow:0 18px 60px rgba(0,0,0,.55);
-    --r18:18px;
-    --r14:14px;
-  }
+:root{
+  --bg:#0b0214;
+  --panel:rgba(255,255,255,.06);
+  --panel2:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.15);
+  --text:#f7f2ff;
+  --muted:#cdb7ff;
+  --accent:#6b5cff;
+  --good:#2ecc71;
+  --warn:#ffd36f;
+  --shadow:0 18px 60px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background:var(--bg);
+  color:var(--text);
+  padding:24px;
+  display:flex;
+  justify-content:center;
+}
+.wrap{
+  width:100%;
+  max-width:1100px;
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:14px;
+}
+@media(max-width:980px){.wrap{grid-template-columns:1fr}}
 
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    padding:24px;
-  }
+.card{
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.head{
+  padding:14px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.head h2{
+  margin:0;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+}
+.body{padding:14px}
 
-  .wrap{
-    width:100%;
-    max-width:1100px;
-    display:grid;
-    grid-template-columns: 1.15fr .85fr;
-    gap:14px;
-  }
-  @media(max-width:980px){
-    .wrap{grid-template-columns:1fr}
-  }
+label{
+  display:block;
+  margin:10px 0 6px;
+  font-size:12px;
+  color:var(--muted);
+}
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.16);
+  background:#0b0114;
+  color:var(--text);
+}
+textarea{min-height:100px}
 
-  .card{
-    border:1px solid var(--border);
-    background:linear-gradient(180deg,var(--panel),var(--panel2));
-    border-radius:var(--r18);
-    box-shadow:var(--shadow);
-    overflow:hidden;
-  }
-  .head{
-    padding:14px 14px 12px;
-    border-bottom:1px solid rgba(255,255,255,.10);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);
-  }
-  .head h2{
-    margin:0;
-    font-size:13px;
-    letter-spacing:.35px;
-    text-transform:uppercase;
-    color:rgba(245,235,255,.92);
-  }
-  .body{padding:14px}
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
 
-  label{
-    display:block;
-    margin:10px 0 6px;
-    color:var(--muted);
-    font-size:12px;
-  }
+.small{font-size:12px;color:var(--muted)}
 
-  input, select, textarea{
-    width:100%;
-    padding:10px;
-    border-radius:var(--r14);
-    border:1px solid rgba(255,255,255,.16);
-    background:#0b0114;
-    color:var(--text);
-    outline:none;
-  }
-  textarea{min-height:96px; resize:vertical}
+.tiers{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+}
+@media(max-width:900px){.tiers{grid-template-columns:1fr}}
 
-  .grid2{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
-  @media(max-width:520px){
-    .grid2{grid-template-columns:1fr}
-  }
+.tierCard{
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;
+  padding:12px;
+  background:rgba(0,0,0,.2);
+}
+.tierBadge{
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.tierDesc{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.4;
+}
 
-  .small{
-    margin-top:8px;
-    font-size:12px;
-    color:var(--muted);
-    line-height:1.35;
-  }
+.lawsScroll{
+  max-height:420px;
+  overflow:auto;
+  margin-top:10px;
+}
+details{
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;
+  margin-bottom:10px;
+  background:rgba(0,0,0,.2);
+}
+summary{
+  cursor:pointer;
+  padding:12px;
+  font-weight:900;
+  font-size:13px;
+}
+summary::-webkit-details-marker{display:none}
 
-  /* Article I reference */
-  .tiers{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:10px;
-    margin-top:10px;
-  }
-  @media(max-width:900px){
-    .tiers{grid-template-columns:1fr}
-  }
-  .tierCard{
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.18);
-    border-radius:16px;
-    padding:12px;
-  }
-  .tierTitle{
-    font-weight:900;
-    font-size:13px;
-    margin:0 0 6px;
-  }
-  .tierDesc{
-    font-size:12px;
-    color:var(--muted);
-    line-height:1.35;
-    margin:0;
-  }
-  .tierBadge{
-    display:inline-block;
-    font-size:11px;
-    padding:3px 8px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.04);
-    color: var(--muted);
-    margin-bottom:8px;
-  }
+.lawRow{
+  display:grid;
+  grid-template-columns:32px 1fr 150px;
+  gap:10px;
+  padding:10px 12px;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.lawRow input{display:none}
+.check{
+  width:22px;height:22px;
+  border:2px solid var(--accent);
+  border-radius:8px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.check::after{
+  content:"✔";
+  font-weight:900;
+  color:white;
+  transform:scale(0);
+}
+input:checked + .check{
+  background:var(--accent);
+}
+input:checked + .check::after{transform:scale(1)}
 
-  /* Laws area */
-  .lawsScroll{
-    max-height:420px;
-    overflow:auto;
-    padding-right:6px;
-    margin-top:10px;
-  }
-  .lawsScroll::-webkit-scrollbar{ width:10px; }
-  .lawsScroll::-webkit-scrollbar-thumb{
-    background: rgba(255,255,255,.18);
-    border-radius: 999px;
-  }
-  .lawsScroll::-webkit-scrollbar-track{
-    background: rgba(0,0,0,.18);
-    border-radius: 999px;
-  }
+.lawMain{cursor:pointer}
+.lawTitle{font-weight:900;font-size:13px}
+.lawDesc{font-size:12px;color:var(--muted)}
 
-  details{
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.14);
-    border-radius: 16px;
-    overflow:hidden;
-    margin-bottom:10px;
-  }
-  summary{
-    list-style:none;
-    cursor:pointer;
-    padding:11px 12px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    user-select:none;
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    font-weight:900;
-    font-size:13px;
-  }
-  summary::-webkit-details-marker{display:none}
-  .sumMeta{
-    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-  }
-  .chip{
-    font-size:11px;
-    padding:3px 8px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.04);
-    color: var(--muted);
-  }
+.btn{
+  padding:12px 16px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  font-weight:900;
+}
+.btn.primary{background:var(--good);color:#062010}
+.btn.copy{background:var(--accent);color:white}
 
-  .lawRow{
-    display:grid;
-    grid-template-columns: 32px 1fr 150px;
-    gap:10px;
-    padding:10px 12px;
-    border-top:1px solid rgba(255,255,255,.10);
-    align-items:flex-start;
-  }
-  @media(max-width:720px){
-    .lawRow{ grid-template-columns: 32px 1fr; }
-    .lawRow .tierBox{ grid-column: 1 / -1; }
-  }
+.output{
+  min-height:360px;
+  font-family:monospace;
+}
 
-  /* Better checkbox */
-  .lawRow input[type="checkbox"]{ display:none; }
-  .check{
-    width:22px; height:22px;
-    border-radius:8px;
-    border:2px solid var(--accent);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    transition:.15s ease;
-    margin-top:2px;
-    flex:0 0 auto;
-  }
-  .check::after{
-    content:"✔";
-    font-size:14px;
-    color:white;
-    transform:scale(0);
-    transition:.15s ease;
-    font-weight:900;
-  }
-  .lawRow input:checked + .check{
-    background:var(--accent);
-    box-shadow:0 0 10px rgba(107,92,255,.55);
-  }
-  .lawRow input:checked + .check::after{
-    transform:scale(1);
-  }
-
-  .lawMain{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    min-width:0;
-  }
-  .lawTitle{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    align-items:center;
-    font-weight:900;
-    font-size:13px;
-  }
-  .codePill{
-    font-size:11px;
-    padding:2px 8px;
-    border-radius:999px;
-    border:1px solid rgba(107,92,255,.40);
-    background: rgba(107,92,255,.10);
-    color: rgba(245,235,255,.95);
-  }
-  .suggest{
-    font-size:11px;
-    padding:2px 8px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.18);
-    color: var(--muted);
-  }
-  .desc{
-    font-size:12px;
-    color:var(--muted);
-    line-height:1.35;
-  }
-
-  .tierBox{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-  }
-  .tierLabel{
-    font-size:11px;
-    color: var(--muted);
-  }
-
-  .btnRow{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:flex-end;
-    margin-top:12px;
-  }
-  .btn{
-    padding:10px 14px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.16);
-    background: rgba(255,255,255,.06);
-    color: var(--text);
-    font-weight:900;
-    cursor:pointer;
-    transition: transform .06s ease, opacity .2s ease;
-  }
-  .btn:active{ transform: translateY(1px); }
-  .btn.primary{
-    border:none;
-    background: linear-gradient(135deg, var(--good), #1e8f4f);
-    color:#061a10;
-  }
-  .btn.copy{
-    border:none;
-    background: linear-gradient(135deg, #6b5cff, #4d3cff);
-    color:#fff;
-  }
-
-  .hint{
-    font-size:12px;
-    color: var(--muted);
-  }
-  .warn{
-    color: var(--warn);
-    font-weight:900;
-  }
-
-  .output{
-    min-height:360px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-size:12px;
-    line-height:1.45;
-  }
-
-  /* Toast */
-  #toast{
-    position:fixed;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:18px;
-    background: rgba(0,0,0,.45);
-    border:1px solid rgba(255,255,255,.18);
-    color:#fff;
-    padding:10px 14px;
-    border-radius:999px;
-    font-size:13px;
-    font-weight:900;
-    opacity:0;
-    pointer-events:none;
-    transition: opacity .2s ease, transform .2s ease;
-    box-shadow: var(--shadow);
-  }
-  #toast.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(-6px);
-  }
+#toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#000a;
+  padding:10px 16px;
+  border-radius:999px;
+  opacity:0;
+  transition:.2s;
+}
+#toast.show{opacity:1}
 </style>
 </head>
 
 <body>
-  <div class="wrap">
+<div class="wrap">
 
-    <!-- LEFT -->
-    <section class="card">
-      <div class="head">
-        <h2>Arrest Log Details</h2>
-        <div class="hint" id="selectedHint">0 laws selected</div>
-      </div>
+<!-- LEFT -->
+<section class="card">
+<div class="head"><h2>Arrest Log Details</h2></div>
+<div class="body">
 
-      <div class="body">
-        <!-- Article I reference -->
-        <div class="card" style="box-shadow:none; margin-bottom:12px;">
-          <div class="head">
-            <h2>Article I: Classification of Offenses</h2>
-            <div class="chip">Reference</div>
-          </div>
-          <div class="body">
-            <div class="tiers">
-              <div class="tierCard">
-                <div class="tierBadge">Tier I — Infraction</div>
-                <div class="tierTitle">Minor violations</div>
-                <p class="tierDesc">Handled quickly; typically warnings, small punishments, or minor corrective actions.</p>
-              </div>
-              <div class="tierCard">
-                <div class="tierBadge">Tier II — Transgression</div>
-                <div class="tierTitle">Moderate violations</div>
-                <p class="tierDesc">More serious misconduct; usually requires formal punishment and supervision.</p>
-              </div>
-              <div class="tierCard">
-                <div class="tierBadge">Tier III — Heresy</div>
-                <div class="tierTitle">Severe violations</div>
-                <p class="tierDesc">Major offenses against the Order; severe punishment, removal, or permanent action likely.</p>
-              </div>
-            </div>
-            <div class="small">This section is a reference from your rules. Select Tier I/II/III per law below.</div>
-          </div>
-        </div>
-
-        <div class="grid2">
-          <div>
-            <label for="arresterUser">Arrester’s username</label>
-            <input id="arresterUser" type="text" placeholder="e.g. marabo13" />
-          </div>
-          <div>
-            <label for="arresterRank">Arrester’s DCoJ rank</label>
-            <select id="arresterRank">
-              <option value="">-- Select rank --</option>
-              <option>Arbiter</option>
-              <option>Quaestor</option>
-              <option>Praetor</option>
-              <option>Sanctor</option>
-              <option>Ast. Chief Arbiter</option>
-              <option>Chief Arbiter</option>
-            </select>
-          </div>
-          <div>
-            <label for="eventDate">Date of the event</label>
-            <input id="eventDate" type="date" />
-          </div>
-          <div>
-            <label for="evader">Law evader username</label>
-            <input id="evader" type="text" placeholder="Username" />
-          </div>
-          <div>
-            <label for="evaderRank">Law evader rank</label>
-            <input id="evaderRank" type="text" placeholder="Rank" />
-          </div>
-        </div>
-
-        <div class="small">
-          Select law(s) and choose a tier for each selected law.  
-          <span class="warn">You must choose Tier I/II/III for every checked law.</span>
-        </div>
-
-        <div class="lawsScroll" id="lawsScroll"></div>
-
-        <div class="grid2" style="margin-top:10px;">
-          <div>
-            <label for="summary">Summary of event</label>
-            <textarea id="summary" placeholder="Write what happened..."></textarea>
-          </div>
-          <div>
-            <label for="evidence">Evidence</label>
-            <textarea id="evidence" placeholder="Links, screenshots, witnesses, logs, etc..."></textarea>
-          </div>
-        </div>
-
-        <div class="btnRow">
-          <button class="btn primary" id="genBtn" type="button">Generate message</button>
-        </div>
-        <div class="hint" id="genHint"></div>
-      </div>
-    </section>
-
-    <!-- RIGHT -->
-    <section class="card">
-      <div class="head">
-        <h2>Generated Message</h2>
-        <div class="btnRow" style="margin:0">
-          <button class="btn copy" id="copyBtn" type="button">Copy</button>
-        </div>
-      </div>
-      <div class="body">
-        <label for="output">Output</label>
-        <textarea id="output" class="output" readonly placeholder="Click Generate message..."></textarea>
-      </div>
-    </section>
-
+<!-- ARTICLE I -->
+<div class="card" style="box-shadow:none;margin-bottom:12px;">
+<div class="head"><h2>Article I: Classification of Offenses</h2></div>
+<div class="body">
+<p class="small">
+All crimes against the Order are classified into three Tiers, determining the severity of the offense and the corresponding range of sanctions.
+</p>
+<div class="tiers">
+  <div class="tierCard">
+    <div class="tierBadge">Tier I: Infractions</div>
+    <p class="tierDesc"><b>Description:</b> Minor offenses that demonstrate a lack of discipline and respect. These are weaknesses to be corrected through punishment.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Reprimand, assignment of possible fines, or brief imprisonment (not to exceed one hour).</p>
   </div>
+  <div class="tierCard">
+    <div class="tierBadge">Tier II: Transgressions</div>
+    <p class="tierDesc"><b>Description:</b> Serious violations that actively harm the Order, its members, or its goals. These acts demonstrate a CLEAR flawed character and potential for betrayal.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Rank demotion, forfeiture of assets (e.g., credits), temporary suspension from the Order, extended imprisonment, or branding with a Mark of Censure.</p>
+  </div>
+  <div class="tierCard">
+    <div class="tierBadge">Tier III: Heresies</div>
+    <p class="tierDesc"><b>Description:</b> The most severe category of crimes, representing a fundamental betrayal of the Order's principles. These acts are unforgivable and threaten the Order's secrecy.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Rank reset, permanent ban from the Order, declared Kill-on-Sight (KOS) status for all members of the Order, or permanent death (PD).</p>
+  </div>
+</div>
+</div>
+</div>
 
-  <div id="toast">Copy successful</div>
+<div class="grid2">
+  <div><label>Arrester’s Username</label><input id="arrester"></div>
+  <div><label>Arrester’s Rank</label>
+    <select id="rank">
+      <option>Arbiter</option><option>Quaestor</option><option>Praetor</option>
+      <option>Sanctor</option><option>Ast. Chief Arbiter</option><option>Chief Arbiter</option>
+    </select>
+  </div>
+  <div><label>Law Evader Username</label><input id="evader"></div>
+  <div><label>Law Evader Rank</label><input id="evaderRank"></div>
+</div>
+
+<label>Summary</label><textarea id="summary"></textarea>
+<label>Evidence</label><textarea id="evidence"></textarea>
+
+<button class="btn primary" onclick="gen()">Generate</button>
+</div>
+</section>
+
+<!-- RIGHT -->
+<section class="card">
+<div class="head"><h2>Generated Log</h2>
+<button class="btn copy" onclick="copy()">Copy</button>
+</div>
+<div class="body">
+<textarea id="out" class="output" readonly></textarea>
+</div>
+</section>
+
+</div>
+
+<div id="toast">Copy successful</div>
 
 <script>
-const ARTICLES = [
-  {
-    title: "Article II: The Code of Power",
-    laws: [
-      { code:"P-01", name:"Contempt of Superiors", suggested:"Tier I", desc:"Openly disrespecting, mocking, or refusing to acknowledge a higher-ranking Sith (incl. refusing to kneel or show proper deference)." },
-      { code:"P-02", name:"Insubordination", suggested:"Tier I or Tier II", desc:"Refusal to carry out a lawful order from superior personnel (severity-based)." },
-      { code:"P-03", name:"Illegitimate Usurpation", suggested:"Tier II or Tier III", desc:"Attempting to seize rank/title through weak means (e.g., OOC collusion, exploiting bugs) (severity-based)." },
-      { code:"P-04", name:"Abuse of Authority", suggested:"Tier II or Tier III", desc:"Using rank to inflict punishments that serve no purpose for the Order; personal whim punishments (severity-based)." },
-      { code:"P-05", name:"Violation of the Sith Regalia", suggested:"Tier I or Tier II", desc:"Deviating from Sith-only attire/regalia or required uniforms; refusal to comply escalates (severity-based)." },
-    ]
-  },
-  {
-    title: "Article III: The Code of Secrecy",
-    laws: [
-      { code:"S-01", name:"Divulgence of Council Secrets", suggested:"Varies", desc:"Revealing Council-reserved intelligence to outsiders (plans, roster, spawn/base locations, internal comms, screenshots of Discord, etc.)." },
-      { code:"S-02", name:"Grand Deception", suggested:"Tier I or Tier II", desc:"Knowingly providing false information to Inner Circle/high ranks during a formal investigation (severity-based)." },
-      { code:"S-03", name:"Unauthorized Access", suggested:"Tier I", desc:"Trespassing restricted areas of the Sith Temple/dojos/spawns beyond one's station." },
-      { code:"S-04", name:"Treason", suggested:"Tier III", desc:"Aiding/abetting enemies of the Sith Order (Jedi/Republic): fraternization, sharing intelligence, sparing enemies without orders, etc." },
-    ]
-  },
-  {
-    title: "Article IV: The Code of Conflict",
-    laws: [
-      { code:"C-01", name:"Cowardice", suggested:"Tier II", desc:"Fleeing after provoking combat; refusing to fight or abandoning post while engaged with enemies." },
-      { code:"C-02", name:"Fraternization with Enemies", suggested:"Tier II", desc:"Non-hostile contact with Jedi/Republic agent without sanctioned operation within Sith-reserved territory." },
-      { code:"C-03", name:"Unsanctioned Fratricide", suggested:"Tier I or Tier II", desc:"Murdering another Sith outside a consented duel (tier depends on victim rank)." },
-      { code:"C-04", name:"Disruption", suggested:"Tier I", desc:"Interfering in official events/duels; healing/attacking/distracting participants; disrupting classes or formal events." },
-      { code:"C-05", name:"Obstruction of Guard Operations", suggested:"Tier II", desc:"Interfering with/harassing/mock/deceiving a guard on duty; compromising authority or readiness." },
-    ]
-  },
-  {
-    title: "Article V: The Code of Order",
-    laws: [
-      { code:"O-01", name:"Major Toxicity", suggested:"Tier II or Tier III", desc:"OOC toxicity: racism, sexism, homophobia, religious/political attacks, slurs, targeted bullying, etc." },
-      { code:"O-02", name:"Exploitation", suggested:"Tier III", desc:"Using third-party software (hacks/scripts) or bugs/glitches to gain unfair advantage; cheating not tolerated." },
-      { code:"O-03", name:"Misuse of Enforcement Commands", suggested:"Tier II", desc:"(Admins/mods) Using OOC commands for IC reasons; tool abuse to gain advantage or punish IC rivals." },
-      { code:"O-04", name:"Alternative Accounts", suggested:"Tier III", desc:"Operating multiple accounts to deceive moderation/community or bypass restrictions (ban evasion, espionage, boosting stats, etc.)." },
-    ]
-  },
-];
+function gen(){
+out.value=
+`Arrester's Username: ${arrester.value}
+Arrester’s Rank: ${rank.value}
 
-const lawsScroll = document.getElementById("lawsScroll");
-const selectedHint = document.getElementById("selectedHint");
-const genHint = document.getElementById("genHint");
+Law Evader Username: ${evader.value}
+Law Evader Rank: ${evaderRank.value}
+Date: ${new Date().toLocaleDateString()}
 
-function tierFixed(s){ return (s === "Tier I" || s === "Tier II" || s === "Tier III"); }
+Summary:
+${summary.value}
 
-function render(){
-  lawsScroll.innerHTML = "";
-
-  ARTICLES.forEach(article => {
-    const details = document.createElement("details");
-    details.open = true;
-
-    const summary = document.createElement("summary");
-    summary.innerHTML = `
-      <div class="sumMeta">
-        <span>${article.title}</span>
-        <span class="chip">${article.laws.length} laws</span>
-      </div>
-      <span class="chip">toggle</span>
-    `;
-
-    const listWrap = document.createElement("div");
-
-    article.laws.forEach((law, idx) => {
-      const id = `${law.code.replace(/[^a-z0-9]/gi,"_")}_${idx}`;
-
-      const row = document.createElement("div");
-      row.className = "lawRow";
-
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.id = `cb_${id}`;
-      cb.dataset.code = law.code;
-
-      const check = document.createElement("div");
-      check.className = "check";
-      check.onclick = () => { cb.checked = !cb.checked; updateCounts(); };
-
-      const main = document.createElement("div");
-      main.className = "lawMain";
-      main.onclick = () => { cb.checked = !cb.checked; updateCounts(); };
-
-      const title = document.createElement("div");
-      title.className = "lawTitle";
-      title.innerHTML = `
-        <span class="codePill">${law.code}</span>
-        <span>${law.name}</span>
-        <span class="suggest">Suggested: ${law.suggested}</span>
-      `;
-
-      const desc = document.createElement("div");
-      desc.className = "desc";
-      desc.textContent = law.desc;
-
-      main.appendChild(title);
-      main.appendChild(desc);
-
-      const tierBox = document.createElement("div");
-      tierBox.className = "tierBox";
-
-      const tierLab = document.createElement("div");
-      tierLab.className = "tierLabel";
-      tierLab.textContent = "Tier (required if selected)";
-
-      const tierSel = document.createElement("select");
-      tierSel.id = `tier_${id}`;
-      tierSel.innerHTML = `
-        <option value="">Select…</option>
-        <option value="Tier I">Tier I</option>
-        <option value="Tier II">Tier II</option>
-        <option value="Tier III">Tier III</option>
-      `;
-      if (tierFixed(law.suggested)) tierSel.value = law.suggested;
-
-      tierBox.appendChild(tierLab);
-      tierBox.appendChild(tierSel);
-
-      cb.addEventListener("change", updateCounts);
-
-      row.appendChild(cb);
-      row.appendChild(check);
-      row.appendChild(main);
-      row.appendChild(tierBox);
-
-      listWrap.appendChild(row);
-    });
-
-    details.appendChild(summary);
-    details.appendChild(listWrap);
-    lawsScroll.appendChild(details);
-  });
-
-  updateCounts();
+Evidence:
+${evidence.value}`;
 }
-
-function getSelected(){
-  const selected = [];
-  document.querySelectorAll('input[type="checkbox"][data-code]').forEach(cb => {
-    if (cb.checked) {
-      const row = cb.parentElement;
-      const tierSel = row.querySelector("select");
-      const code = cb.dataset.code;
-      const name = row.querySelector(".lawTitle span:nth-child(2)")?.textContent || "";
-      selected.push({ code, name, tier: tierSel.value });
-    }
-  });
-  return selected;
+function copy(){
+out.select();document.execCommand("copy");
+toast.classList.add("show");
+setTimeout(()=>toast.classList.remove("show"),1200);
 }
-
-function updateCounts(){
-  const selected = getSelected();
-  selectedHint.textContent = `${selected.length} laws selected`;
-
-  const missing = selected.filter(x => !x.tier);
-  if (missing.length){
-    genHint.innerHTML = `<span class="warn">Missing tier for ${missing.length} selected law(s).</span>`;
-  } else {
-    genHint.textContent = "";
-  }
-}
-
-function formatTodayISO(){
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth()+1).padStart(2,"0");
-  const dd = String(d.getDate()).padStart(2,"0");
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-function generateMessage(){
-  const arresterUser = document.getElementById("arresterUser").value.trim();
-  const arresterRank = document.getElementById("arresterRank").value.trim();
-
-  const evader = document.getElementById("evader").value.trim();
-  const evaderRank = document.getElementById("evaderRank").value.trim();
-  const date = document.getElementById("eventDate").value;
-
-  const summary = document.getElementById("summary").value.trim();
-  const evidence = document.getElementById("evidence").value.trim();
-
-  const selected = getSelected();
-  const missing = selected.filter(x => !x.tier);
-  if (missing.length){
-    genHint.innerHTML = `<span class="warn">Can’t generate: select Tier I/II/III for every checked law.</span>`;
-    return;
-  }
-
-  const lawsLine = selected.map(x => `${x.code}: ${x.name}`).join("; ");
-  const tiersLine = [...new Set(selected.map(x => x.tier))].join(", ");
-
-  const msg =
-`Arrester's username: ${arresterUser}
-Arrester’s DCoJ rank: ${arresterRank}
-
-Law evader username: ${evader}
-Law evader rank: ${evaderRank}
-Date of the event: ${date}
-
-Law(s) broken: ${lawsLine}
-Tier(s): ${tiersLine}
-
-Summary of event: ${summary}
-Evidence: ${evidence}`.trimEnd();
-
-  document.getElementById("output").value = msg;
-  genHint.textContent = "Generated.";
-}
-
-async function copyOutput(){
-  const out = document.getElementById("output").value.trim();
-  if (!out) return;
-
-  try{
-    await navigator.clipboard.writeText(out);
-  }catch{
-    const ta = document.getElementById("output");
-    ta.focus(); ta.select();
-    document.execCommand("copy");
-  }
-  showToast("Copy successful");
-}
-
-function showToast(text){
-  const t = document.getElementById("toast");
-  t.textContent = text;
-  t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 1100);
-}
-
-document.getElementById("genBtn").addEventListener("click", generateMessage);
-document.getElementById("copyBtn").addEventListener("click", copyOutput);
-
-document.getElementById("eventDate").value = formatTodayISO();
-render();
 </script>
 </body>
 </html>
