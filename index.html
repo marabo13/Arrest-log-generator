@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DCoJ Arrest Log Generator</title>
 
 <style>
@@ -16,12 +16,11 @@
   --accent:#6b5cff;
   --good:#2ecc71;
   --warn:#ffd36f;
-  --shadow:0 18px 60px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  font-family:system-ui,Segoe UI,Roboto,Arial;
   background:var(--bg);
   color:var(--text);
   padding:24px;
@@ -32,16 +31,15 @@ body{
   width:100%;
   max-width:1100px;
   display:grid;
-  grid-template-columns:1.15fr .85fr;
+  grid-template-columns:1.2fr .8fr;
   gap:14px;
 }
-@media(max-width:980px){.wrap{grid-template-columns:1fr}}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
 
 .card{
-  border:1px solid var(--border);
   background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border:1px solid var(--border);
   border-radius:18px;
-  box-shadow:var(--shadow);
   overflow:hidden;
 }
 .head{
@@ -54,8 +52,8 @@ body{
 .head h2{
   margin:0;
   font-size:13px;
-  text-transform:uppercase;
   letter-spacing:.3px;
+  text-transform:uppercase;
 }
 .body{padding:14px}
 
@@ -73,7 +71,7 @@ input,select,textarea{
   background:#0b0114;
   color:var(--text);
 }
-textarea{min-height:100px}
+textarea{min-height:90px}
 
 .grid2{
   display:grid;
@@ -82,24 +80,25 @@ textarea{min-height:100px}
 }
 @media(max-width:520px){.grid2{grid-template-columns:1fr}}
 
-.small{font-size:12px;color:var(--muted)}
+.small{font-size:12px;color:var(--muted);line-height:1.4}
 
+/* ===== Article I ===== */
 .tiers{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
   gap:10px;
+  margin-bottom:14px;
 }
 @media(max-width:900px){.tiers{grid-template-columns:1fr}}
-
 .tierCard{
   border:1px solid rgba(255,255,255,.14);
   border-radius:16px;
   padding:12px;
-  background:rgba(0,0,0,.2);
+  background:rgba(0,0,0,.18);
 }
-.tierBadge{
-  font-size:12px;
+.tierTitle{
   font-weight:900;
+  font-size:13px;
   margin-bottom:6px;
 }
 .tierDesc{
@@ -108,6 +107,7 @@ textarea{min-height:100px}
   line-height:1.4;
 }
 
+/* ===== Laws ===== */
 .lawsScroll{
   max-height:420px;
   overflow:auto;
@@ -116,8 +116,8 @@ textarea{min-height:100px}
 details{
   border:1px solid rgba(255,255,255,.14);
   border-radius:16px;
+  background:rgba(0,0,0,.18);
   margin-bottom:10px;
-  background:rgba(0,0,0,.2);
 }
 summary{
   cursor:pointer;
@@ -129,7 +129,7 @@ summary::-webkit-details-marker{display:none}
 
 .lawRow{
   display:grid;
-  grid-template-columns:32px 1fr 150px;
+  grid-template-columns:32px 1fr 140px;
   gap:10px;
   padding:10px 12px;
   border-top:1px solid rgba(255,255,255,.1);
@@ -137,8 +137,8 @@ summary::-webkit-details-marker{display:none}
 .lawRow input{display:none}
 .check{
   width:22px;height:22px;
-  border:2px solid var(--accent);
   border-radius:8px;
+  border:2px solid var(--accent);
   cursor:pointer;
   display:flex;
   align-items:center;
@@ -146,8 +146,8 @@ summary::-webkit-details-marker{display:none}
 }
 .check::after{
   content:"✔";
-  font-weight:900;
   color:white;
+  font-weight:900;
   transform:scale(0);
 }
 input:checked + .check{
@@ -166,7 +166,7 @@ input:checked + .check::after{transform:scale(1)}
   cursor:pointer;
   font-weight:900;
 }
-.btn.primary{background:var(--good);color:#062010}
+.btn.primary{background:var(--good);color:#061a10}
 .btn.copy{background:var(--accent);color:white}
 
 .output{
@@ -176,7 +176,7 @@ input:checked + .check::after{transform:scale(1)}
 
 #toast{
   position:fixed;
-  bottom:20px;
+  bottom:18px;
   left:50%;
   transform:translateX(-50%);
   background:#000a;
@@ -198,7 +198,7 @@ input:checked + .check::after{transform:scale(1)}
 <div class="body">
 
 <!-- ARTICLE I -->
-<div class="card" style="box-shadow:none;margin-bottom:12px;">
+<div class="card" style="box-shadow:none;margin-bottom:14px;">
 <div class="head"><h2>Article I: Classification of Offenses</h2></div>
 <div class="body">
 <p class="small">
@@ -206,19 +206,19 @@ All crimes against the Order are classified into three Tiers, determining the se
 </p>
 <div class="tiers">
   <div class="tierCard">
-    <div class="tierBadge">Tier I: Infractions</div>
+    <div class="tierTitle">Tier I: Infractions</div>
     <p class="tierDesc"><b>Description:</b> Minor offenses that demonstrate a lack of discipline and respect. These are weaknesses to be corrected through punishment.</p>
     <p class="tierDesc"><b>Standard Sanctions:</b> Reprimand, assignment of possible fines, or brief imprisonment (not to exceed one hour).</p>
   </div>
   <div class="tierCard">
-    <div class="tierBadge">Tier II: Transgressions</div>
+    <div class="tierTitle">Tier II: Transgressions</div>
     <p class="tierDesc"><b>Description:</b> Serious violations that actively harm the Order, its members, or its goals. These acts demonstrate a CLEAR flawed character and potential for betrayal.</p>
-    <p class="tierDesc"><b>Standard Sanctions:</b> Rank demotion, forfeiture of assets (e.g., credits), temporary suspension from the Order, extended imprisonment, or branding with a Mark of Censure.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Rank demotion, forfeiture of assets, temporary suspension, extended imprisonment, or branding with a Mark of Censure.</p>
   </div>
   <div class="tierCard">
-    <div class="tierBadge">Tier III: Heresies</div>
-    <p class="tierDesc"><b>Description:</b> The most severe category of crimes, representing a fundamental betrayal of the Order's principles. These acts are unforgivable and threaten the Order's secrecy.</p>
-    <p class="tierDesc"><b>Standard Sanctions:</b> Rank reset, permanent ban from the Order, declared Kill-on-Sight (KOS) status for all members of the Order, or permanent death (PD).</p>
+    <div class="tierTitle">Tier III: Heresies</div>
+    <p class="tierDesc"><b>Description:</b> The most severe category of crimes, representing a fundamental betrayal of the Order's principles.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Rank reset, permanent ban, Kill-on-Sight (KOS), or permanent death (PD).</p>
   </div>
 </div>
 </div>
@@ -226,30 +226,39 @@ All crimes against the Order are classified into three Tiers, determining the se
 
 <div class="grid2">
   <div><label>Arrester’s Username</label><input id="arrester"></div>
-  <div><label>Arrester’s Rank</label>
+  <div><label>Arrester’s DCoJ Rank</label>
     <select id="rank">
-      <option>Arbiter</option><option>Quaestor</option><option>Praetor</option>
-      <option>Sanctor</option><option>Ast. Chief Arbiter</option><option>Chief Arbiter</option>
+      <option>Arbiter</option>
+      <option>Quaestor</option>
+      <option>Praetor</option>
+      <option>Sanctor</option>
+      <option>Ast. Chief Arbiter</option>
+      <option>Chief Arbiter</option>
     </select>
   </div>
   <div><label>Law Evader Username</label><input id="evader"></div>
   <div><label>Law Evader Rank</label><input id="evaderRank"></div>
 </div>
 
-<label>Summary</label><textarea id="summary"></textarea>
-<label>Evidence</label><textarea id="evidence"></textarea>
+<div class="lawsScroll" id="laws"></div>
 
-<button class="btn primary" onclick="gen()">Generate</button>
+<label>Summary of Event</label>
+<textarea id="summary"></textarea>
+<label>Evidence</label>
+<textarea id="evidence"></textarea>
+
+<button class="btn primary" onclick="generate()">Generate</button>
 </div>
 </section>
 
 <!-- RIGHT -->
 <section class="card">
-<div class="head"><h2>Generated Log</h2>
-<button class="btn copy" onclick="copy()">Copy</button>
+<div class="head">
+  <h2>Generated Log</h2>
+  <button class="btn copy" onclick="copyLog()">Copy</button>
 </div>
 <div class="body">
-<textarea id="out" class="output" readonly></textarea>
+<textarea id="output" class="output" readonly></textarea>
 </div>
 </section>
 
@@ -258,10 +267,65 @@ All crimes against the Order are classified into three Tiers, determining the se
 <div id="toast">Copy successful</div>
 
 <script>
-function gen(){
-out.value=
+const ARTICLES = {
+  "Article II: The Code of Power":[
+    ["P-01","Contempt of Superiors"],
+    ["P-02","Insubordination"],
+    ["P-03","Illegitimate Usurpation"],
+    ["P-04","Abuse of Authority"],
+    ["P-05","Violation of the Sith Regalia"]
+  ],
+  "Article III: The Code of Secrecy":[
+    ["S-01","Divulgence of Council Secrets"],
+    ["S-02","Grand Deception"],
+    ["S-03","Unauthorized Access"],
+    ["S-04","Treason"]
+  ],
+  "Article IV: The Code of Conflict":[
+    ["C-01","Cowardice"],
+    ["C-02","Fraternization with Enemies"],
+    ["C-03","Unsanctioned Fratricide"],
+    ["C-04","Disruption"],
+    ["C-05","Obstruction of Guard Operations"]
+  ],
+  "Article V: The Code of Order":[
+    ["O-01","Major Toxicity"],
+    ["O-02","Exploitation"],
+    ["O-03","Misuse of Enforcement Commands"],
+    ["O-04","Alternative Accounts"]
+  ]
+};
+
+const lawsDiv=document.getElementById("laws");
+
+for(const art in ARTICLES){
+  const d=document.createElement("details");d.open=true;
+  const s=document.createElement("summary");s.textContent=art;
+  d.appendChild(s);
+  ARTICLES[art].forEach(l=>{
+    const r=document.createElement("div");r.className="lawRow";
+    r.innerHTML=`
+      <input type="checkbox">
+      <div class="check"></div>
+      <div class="lawMain">
+        <div class="lawTitle">${l[0]} — ${l[1]}</div>
+      </div>
+      <select>
+        <option>Tier I</option>
+        <option>Tier II</option>
+        <option>Tier III</option>
+      </select>`;
+    r.querySelector(".check").onclick=()=>r.querySelector("input").checked^=1;
+    r.querySelector(".lawMain").onclick=()=>r.querySelector("input").checked^=1;
+    d.appendChild(r);
+  });
+  lawsDiv.appendChild(d);
+}
+
+function generate(){
+  output.value=
 `Arrester's Username: ${arrester.value}
-Arrester’s Rank: ${rank.value}
+Arrester’s DCoJ Rank: ${rank.value}
 
 Law Evader Username: ${evader.value}
 Law Evader Rank: ${evaderRank.value}
@@ -273,10 +337,10 @@ ${summary.value}
 Evidence:
 ${evidence.value}`;
 }
-function copy(){
-out.select();document.execCommand("copy");
-toast.classList.add("show");
-setTimeout(()=>toast.classList.remove("show"),1200);
+function copyLog(){
+  output.select();document.execCommand("copy");
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"),1200);
 }
 </script>
 </body>
