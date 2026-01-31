@@ -135,6 +135,8 @@ summary::-webkit-details-marker{display:none}
   border-top:1px solid rgba(255,255,255,.1);
 }
 .lawRow input{display:none}
+
+/* nicer checkbox */
 .check{
   width:22px;height:22px;
   border-radius:8px;
@@ -152,6 +154,7 @@ summary::-webkit-details-marker{display:none}
 }
 input:checked + .check{
   background:var(--accent);
+  box-shadow:0 0 10px rgba(107,92,255,.55);
 }
 input:checked + .check::after{transform:scale(1)}
 
@@ -186,6 +189,7 @@ input:checked + .check::after{transform:scale(1)}
   transition:.2s;
 }
 #toast.show{opacity:1}
+.warn{color:var(--warn);font-weight:900}
 </style>
 </head>
 
@@ -207,18 +211,18 @@ All crimes against the Order are classified into three Tiers, determining the se
 <div class="tiers">
   <div class="tierCard">
     <div class="tierTitle">Tier I: Infractions</div>
-    <p class="tierDesc"><b>Description:</b> Minor offenses that demonstrate a lack of discipline and respect.</p>
-    <p class="tierDesc"><b>Standard Sanctions:</b> Reprimand, possible fines, or brief imprisonment (≤ 1 hour).</p>
+    <p class="tierDesc"><b>Description:</b> Minor offenses that demonstrate a lack of discipline and respect. These are weaknesses to be corrected through punishment.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Reprimand, assignment of possible fines, or brief imprisonment (not to exceed one hour).</p>
   </div>
   <div class="tierCard">
     <div class="tierTitle">Tier II: Transgressions</div>
-    <p class="tierDesc"><b>Description:</b> Serious violations harming the Order or its members.</p>
-    <p class="tierDesc"><b>Standard Sanctions:</b> Rank demotion, asset forfeiture, suspension, imprisonment, or Mark of Censure.</p>
+    <p class="tierDesc"><b>Description:</b> Serious violations that actively harm the Order, its members, or its goals. These acts demonstrate a CLEAR flawed character and potential for betrayal.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Rank demotion, forfeiture of assets (e.g., credits), temporary suspension from the Order, extended imprisonment, or branding with a Mark of Censure.</p>
   </div>
   <div class="tierCard">
     <div class="tierTitle">Tier III: Heresies</div>
-    <p class="tierDesc"><b>Description:</b> Fundamental betrayal of the Order.</p>
-    <p class="tierDesc"><b>Standard Sanctions:</b> Rank reset, permanent ban, KOS, or permanent death (PD).</p>
+    <p class="tierDesc"><b>Description:</b> The most severe category of crimes, representing a fundamental betrayal of the Order's principles. These acts are unforgivable and threaten the Order's secrecy.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Rank reset, permanent ban from the Order, declared Kill-on-Sight (KOS), or permanent death (PD).</p>
   </div>
 </div>
 </div>
@@ -226,12 +230,12 @@ All crimes against the Order are classified into three Tiers, determining the se
 
 <div class="grid2">
   <div>
-    <label>Arrester’s Username</label>
+    <label>Arrester’s username</label>
     <input id="arrester">
   </div>
   <div>
-    <label>Arrester’s DCoJ Rank</label>
-    <select id="rank">
+    <label>Arrester’s DCoJ rank</label>
+    <select id="arresterRank">
       <option>Arbiter</option>
       <option>Quaestor</option>
       <option>Praetor</option>
@@ -241,14 +245,18 @@ All crimes against the Order are classified into three Tiers, determining the se
     </select>
   </div>
   <div>
-    <label>Law Evader Username</label>
-    <input id="evader">
+    <label>Offender’s username</label>
+    <input id="offender">
   </div>
   <div>
-    <label>Law Evader Rank</label>
-    <select id="evaderRank">
+    <label>Offender’s rank</label>
+    <select id="offenderRank">
       <option>Sith Potential</option>
-      <option>Sith Acolyte (I - V)</option>
+      <option>Sith Acolyte I</option>
+      <option>Sith Acolyte II</option>
+      <option>Sith Acolyte III</option>
+      <option>Sith Acolyte IV</option>
+      <option>Sith Acolyte V</option>
       <option>Sith Initiate</option>
       <option>Sith Apprentice</option>
       <option>Sith Knight</option>
@@ -256,27 +264,38 @@ All crimes against the Order are classified into three Tiers, determining the se
       <option>Sith Lord</option>
     </select>
   </div>
+  <div>
+    <label>Date of the event</label>
+    <input id="eventDate" type="date">
+  </div>
+</div>
+
+<div class="small" style="margin-top:10px;">
+  Select law(s) and choose a tier for each selected law.
+  <span class="warn">Each selected law must have a tier.</span>
 </div>
 
 <div class="lawsScroll" id="laws"></div>
 
-<label>Summary of Event</label>
+<label>Summary of event</label>
 <textarea id="summary"></textarea>
+
 <label>Evidence</label>
 <textarea id="evidence"></textarea>
 
 <button class="btn primary" onclick="generate()">Generate</button>
+<div id="warnText" class="small"></div>
 </div>
 </section>
 
 <!-- RIGHT -->
 <section class="card">
 <div class="head">
-  <h2>Generated Log</h2>
+  <h2>Generated Message</h2>
   <button class="btn copy" onclick="copyLog()">Copy</button>
 </div>
 <div class="body">
-<textarea id="output" class="output" readonly></textarea>
+<textarea id="output" class="output" readonly placeholder="Click Generate..."></textarea>
 </div>
 </section>
 
@@ -315,51 +334,95 @@ const ARTICLES = {
 };
 
 const lawsDiv=document.getElementById("laws");
+const warnText=document.getElementById("warnText");
 
-for(const art in ARTICLES){
-  const d=document.createElement("details"); d.open=true;
-  const s=document.createElement("summary"); s.textContent=art;
-  d.appendChild(s);
-  ARTICLES[art].forEach(l=>{
-    const r=document.createElement("div"); r.className="lawRow";
-    r.innerHTML=`
-      <input type="checkbox">
-      <div class="check"></div>
-      <div class="lawMain">
-        <div class="lawTitle">${l[0]} — ${l[1]}</div>
-      </div>
-      <select>
-        <option>Tier I</option>
-        <option>Tier II</option>
-        <option>Tier III</option>
-      </select>`;
-    r.querySelector(".check").onclick=()=>r.querySelector("input").checked^=1;
-    r.querySelector(".lawMain").onclick=()=>r.querySelector("input").checked^=1;
-    d.appendChild(r);
+function buildLaws(){
+  for(const art in ARTICLES){
+    const d=document.createElement("details"); d.open=true;
+    const s=document.createElement("summary"); s.textContent=art;
+    d.appendChild(s);
+
+    ARTICLES[art].forEach(l=>{
+      const r=document.createElement("div");
+      r.className="lawRow";
+      r.innerHTML=`
+        <input type="checkbox">
+        <div class="check"></div>
+        <div class="lawMain">
+          <div class="lawTitle">${l[0]} — ${l[1]}</div>
+        </div>
+        <select>
+          <option value="">Select tier…</option>
+          <option>Tier I</option>
+          <option>Tier II</option>
+          <option>Tier III</option>
+        </select>
+      `;
+      r.querySelector(".check").onclick=()=>r.querySelector("input").checked = !r.querySelector("input").checked;
+      r.querySelector(".lawMain").onclick=()=>r.querySelector("input").checked = !r.querySelector("input").checked;
+      d.appendChild(r);
+    });
+
+    lawsDiv.appendChild(d);
+  }
+}
+
+function getSelectedLaws(){
+  const selected = [];
+  document.querySelectorAll(".lawRow").forEach(row=>{
+    const cb=row.querySelector("input");
+    const sel=row.querySelector("select");
+    if(cb.checked){
+      const title=row.querySelector(".lawTitle").textContent;
+      selected.push({title, tier: sel.value});
+    }
   });
-  lawsDiv.appendChild(d);
+  return selected;
 }
 
 function generate(){
-  output.value=
-`Arrester's Username: ${arrester.value}
-Arrester’s DCoJ Rank: ${rank.value}
+  warnText.textContent = "";
 
-Law Evader Username: ${evader.value}
-Law Evader Rank: ${evaderRank.value}
-Date: ${new Date().toLocaleDateString()}
+  const selected = getSelectedLaws();
+  const missingTier = selected.filter(x=>!x.tier);
 
-Summary:
-${summary.value}
+  if(missingTier.length){
+    warnText.innerHTML = `<span class="warn">Missing tier for ${missingTier.length} selected law(s).</span>`;
+    return;
+  }
 
-Evidence:
-${evidence.value}`;
+  const lawsBroken = selected.map(x=>x.title).join("; ");
+  const tiers = [...new Set(selected.map(x=>x.tier))].join(", ");
+
+  output.value =
+`Arrester’s username: ${arrester.value}
+Arrester’s DCoJ rank: ${arresterRank.value}
+Offender’s username: ${offender.value}
+Offender’s rank: ${offenderRank.value}
+Date of the event: ${eventDate.value}
+Law(s) broken: ${lawsBroken}
+Tier(s): ${tiers}
+Summary of event: ${summary.value}
+Evidence: ${evidence.value}`;
 }
+
 function copyLog(){
-  output.select(); document.execCommand("copy");
+  output.select();
+  document.execCommand("copy");
   toast.classList.add("show");
   setTimeout(()=>toast.classList.remove("show"),1200);
 }
+
+function setToday(){
+  const d = new Date();
+  const yyyy=d.getFullYear();
+  const mm=String(d.getMonth()+1).padStart(2,"0");
+  const dd=String(d.getDate()).padStart(2,"0");
+  eventDate.value = `${yyyy}-${mm}-${dd}`;
+}
+
+buildLaws();
+setToday();
 </script>
 </body>
 </html>
