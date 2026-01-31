@@ -103,6 +103,44 @@
     line-height:1.35;
   }
 
+  /* Article I reference */
+  .tiers{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  @media(max-width:900px){
+    .tiers{grid-template-columns:1fr}
+  }
+  .tierCard{
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.18);
+    border-radius:16px;
+    padding:12px;
+  }
+  .tierTitle{
+    font-weight:900;
+    font-size:13px;
+    margin:0 0 6px;
+  }
+  .tierDesc{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.35;
+    margin:0;
+  }
+  .tierBadge{
+    display:inline-block;
+    font-size:11px;
+    padding:3px 8px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.04);
+    color: var(--muted);
+    margin-bottom:8px;
+  }
+
   /* Laws area */
   .lawsScroll{
     max-height:420px;
@@ -315,7 +353,7 @@
 <body>
   <div class="wrap">
 
-    <!-- LEFT: inputs + laws -->
+    <!-- LEFT -->
     <section class="card">
       <div class="head">
         <h2>Arrest Log Details</h2>
@@ -323,14 +361,38 @@
       </div>
 
       <div class="body">
+        <!-- Article I reference -->
+        <div class="card" style="box-shadow:none; margin-bottom:12px;">
+          <div class="head">
+            <h2>Article I: Classification of Offenses</h2>
+            <div class="chip">Reference</div>
+          </div>
+          <div class="body">
+            <div class="tiers">
+              <div class="tierCard">
+                <div class="tierBadge">Tier I — Infraction</div>
+                <div class="tierTitle">Minor violations</div>
+                <p class="tierDesc">Handled quickly; typically warnings, small punishments, or minor corrective actions.</p>
+              </div>
+              <div class="tierCard">
+                <div class="tierBadge">Tier II — Transgression</div>
+                <div class="tierTitle">Moderate violations</div>
+                <p class="tierDesc">More serious misconduct; usually requires formal punishment and supervision.</p>
+              </div>
+              <div class="tierCard">
+                <div class="tierBadge">Tier III — Heresy</div>
+                <div class="tierTitle">Severe violations</div>
+                <p class="tierDesc">Major offenses against the Order; severe punishment, removal, or permanent action likely.</p>
+              </div>
+            </div>
+            <div class="small">This section is a reference from your rules. Select Tier I/II/III per law below.</div>
+          </div>
+        </div>
+
         <div class="grid2">
           <div>
             <label for="arresterUser">Arrester’s username</label>
             <input id="arresterUser" type="text" placeholder="e.g. marabo13" />
-          </div>
-          <div>
-            <label for="arresterName">Arrester’s name</label>
-            <input id="arresterName" type="text" placeholder="e.g. Huggo" />
           </div>
           <div>
             <label for="arresterRank">Arrester’s DCoJ rank</label>
@@ -348,7 +410,6 @@
             <label for="eventDate">Date of the event</label>
             <input id="eventDate" type="date" />
           </div>
-
           <div>
             <label for="evader">Law evader username</label>
             <input id="evader" type="text" placeholder="Username" />
@@ -384,7 +445,7 @@
       </div>
     </section>
 
-    <!-- RIGHT: output -->
+    <!-- RIGHT -->
     <section class="card">
       <div class="head">
         <h2>Generated Message</h2>
@@ -403,7 +464,6 @@
   <div id="toast">Copy successful</div>
 
 <script>
-/* ===== Laws from your screenshots ===== */
 const ARTICLES = [
   {
     title: "Article II: The Code of Power",
@@ -449,9 +509,7 @@ const lawsScroll = document.getElementById("lawsScroll");
 const selectedHint = document.getElementById("selectedHint");
 const genHint = document.getElementById("genHint");
 
-function tierFixed(s){
-  return (s === "Tier I" || s === "Tier II" || s === "Tier III");
-}
+function tierFixed(s){ return (s === "Tier I" || s === "Tier II" || s === "Tier III"); }
 
 function render(){
   lawsScroll.innerHTML = "";
@@ -520,7 +578,6 @@ function render(){
         <option value="Tier II">Tier II</option>
         <option value="Tier III">Tier III</option>
       `;
-
       if (tierFixed(law.suggested)) tierSel.value = law.suggested;
 
       tierBox.appendChild(tierLab);
@@ -580,7 +637,6 @@ function formatTodayISO(){
 
 function generateMessage(){
   const arresterUser = document.getElementById("arresterUser").value.trim();
-  const arresterName = document.getElementById("arresterName").value.trim();
   const arresterRank = document.getElementById("arresterRank").value.trim();
 
   const evader = document.getElementById("evader").value.trim();
@@ -602,7 +658,6 @@ function generateMessage(){
 
   const msg =
 `Arrester's username: ${arresterUser}
-Arrester's name: ${arresterName}
 Arrester’s DCoJ rank: ${arresterRank}
 
 Law evader username: ${evader}
