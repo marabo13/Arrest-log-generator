@@ -207,26 +207,30 @@ All crimes against the Order are classified into three Tiers, determining the se
 <div class="tiers">
   <div class="tierCard">
     <div class="tierTitle">Tier I: Infractions</div>
-    <p class="tierDesc"><b>Description:</b> Minor offenses that demonstrate a lack of discipline and respect. These are weaknesses to be corrected through punishment.</p>
-    <p class="tierDesc"><b>Standard Sanctions:</b> Reprimand, assignment of possible fines, or brief imprisonment (not to exceed one hour).</p>
+    <p class="tierDesc"><b>Description:</b> Minor offenses that demonstrate a lack of discipline and respect.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Reprimand, possible fines, or brief imprisonment (≤ 1 hour).</p>
   </div>
   <div class="tierCard">
     <div class="tierTitle">Tier II: Transgressions</div>
-    <p class="tierDesc"><b>Description:</b> Serious violations that actively harm the Order, its members, or its goals. These acts demonstrate a CLEAR flawed character and potential for betrayal.</p>
-    <p class="tierDesc"><b>Standard Sanctions:</b> Rank demotion, forfeiture of assets, temporary suspension, extended imprisonment, or branding with a Mark of Censure.</p>
+    <p class="tierDesc"><b>Description:</b> Serious violations harming the Order or its members.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Rank demotion, asset forfeiture, suspension, imprisonment, or Mark of Censure.</p>
   </div>
   <div class="tierCard">
     <div class="tierTitle">Tier III: Heresies</div>
-    <p class="tierDesc"><b>Description:</b> The most severe category of crimes, representing a fundamental betrayal of the Order's principles.</p>
-    <p class="tierDesc"><b>Standard Sanctions:</b> Rank reset, permanent ban, Kill-on-Sight (KOS), or permanent death (PD).</p>
+    <p class="tierDesc"><b>Description:</b> Fundamental betrayal of the Order.</p>
+    <p class="tierDesc"><b>Standard Sanctions:</b> Rank reset, permanent ban, KOS, or permanent death (PD).</p>
   </div>
 </div>
 </div>
 </div>
 
 <div class="grid2">
-  <div><label>Arrester’s Username</label><input id="arrester"></div>
-  <div><label>Arrester’s DCoJ Rank</label>
+  <div>
+    <label>Arrester’s Username</label>
+    <input id="arrester">
+  </div>
+  <div>
+    <label>Arrester’s DCoJ Rank</label>
     <select id="rank">
       <option>Arbiter</option>
       <option>Quaestor</option>
@@ -236,8 +240,22 @@ All crimes against the Order are classified into three Tiers, determining the se
       <option>Chief Arbiter</option>
     </select>
   </div>
-  <div><label>Law Evader Username</label><input id="evader"></div>
-  <div><label>Law Evader Rank</label><input id="evaderRank"></div>
+  <div>
+    <label>Law Evader Username</label>
+    <input id="evader">
+  </div>
+  <div>
+    <label>Law Evader Rank</label>
+    <select id="evaderRank">
+      <option>Sith Potential</option>
+      <option>Sith Acolyte (I - V)</option>
+      <option>Sith Initiate</option>
+      <option>Sith Apprentice</option>
+      <option>Sith Knight</option>
+      <option>Advanced Sith Knight</option>
+      <option>Sith Lord</option>
+    </select>
+  </div>
 </div>
 
 <div class="lawsScroll" id="laws"></div>
@@ -299,11 +317,11 @@ const ARTICLES = {
 const lawsDiv=document.getElementById("laws");
 
 for(const art in ARTICLES){
-  const d=document.createElement("details");d.open=true;
-  const s=document.createElement("summary");s.textContent=art;
+  const d=document.createElement("details"); d.open=true;
+  const s=document.createElement("summary"); s.textContent=art;
   d.appendChild(s);
   ARTICLES[art].forEach(l=>{
-    const r=document.createElement("div");r.className="lawRow";
+    const r=document.createElement("div"); r.className="lawRow";
     r.innerHTML=`
       <input type="checkbox">
       <div class="check"></div>
@@ -338,7 +356,7 @@ Evidence:
 ${evidence.value}`;
 }
 function copyLog(){
-  output.select();document.execCommand("copy");
+  output.select(); document.execCommand("copy");
   toast.classList.add("show");
   setTimeout(()=>toast.classList.remove("show"),1200);
 }
