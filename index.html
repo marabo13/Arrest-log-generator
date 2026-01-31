@@ -16,11 +16,9 @@
     --accent:#6b5cff;
     --good:#2ecc71;
     --warn:#ffd36f;
-    --bad:#e74c3c;
     --shadow:0 18px 60px rgba(0,0,0,.55);
     --r18:18px;
     --r14:14px;
-    --r12:12px;
   }
 
   *{box-sizing:border-box}
@@ -277,6 +275,10 @@
     font-size:12px;
     color: var(--muted);
   }
+  .warn{
+    color: var(--warn);
+    font-weight:900;
+  }
 
   .output{
     min-height:360px;
@@ -307,11 +309,6 @@
     opacity:1;
     transform:translateX(-50%) translateY(-6px);
   }
-
-  .warn{
-    color: var(--warn);
-    font-weight:900;
-  }
 </style>
 </head>
 
@@ -328,22 +325,37 @@
       <div class="body">
         <div class="grid2">
           <div>
-            <label for="evader">Law evader username</label>
-            <input id="evader" type="text" placeholder="Username" />
+            <label for="arresterUser">Arrester’s username</label>
+            <input id="arresterUser" type="text" placeholder="e.g. marabo13" />
           </div>
           <div>
-            <label for="evaderRank">Law evader rank</label>
-            <input id="evaderRank" type="text" placeholder="Rank" />
+            <label for="arresterName">Arrester’s name</label>
+            <input id="arresterName" type="text" placeholder="e.g. Huggo" />
           </div>
-
+          <div>
+            <label for="arresterRank">Arrester’s DCoJ rank</label>
+            <select id="arresterRank">
+              <option value="">-- Select rank --</option>
+              <option>Arbiter</option>
+              <option>Quaestor</option>
+              <option>Praetor</option>
+              <option>Sanctor</option>
+              <option>Ast. Chief Arbiter</option>
+              <option>Chief Arbiter</option>
+            </select>
+          </div>
           <div>
             <label for="eventDate">Date of the event</label>
             <input id="eventDate" type="date" />
           </div>
 
           <div>
-            <label for="officer">Arrester / Officer</label>
-            <input id="officer" type="text" placeholder="Officer name (optional)" />
+            <label for="evader">Law evader username</label>
+            <input id="evader" type="text" placeholder="Username" />
+          </div>
+          <div>
+            <label for="evaderRank">Law evader rank</label>
+            <input id="evaderRank" type="text" placeholder="Rank" />
           </div>
         </div>
 
@@ -391,13 +403,7 @@
   <div id="toast">Copy successful</div>
 
 <script>
-/* ===== Laws from your screenshots =====
-   - Tier choices are ONLY Tier I/II/III (manual)
-   - We show "Suggested" based on the rule text:
-     - If the law is fixed (Tier I / II / III), we preselect it.
-     - If it says "Tier I or Tier II" / "Tier II or Tier III" / "Varies", we do NOT preselect.
-*/
-
+/* ===== Laws from your screenshots ===== */
 const ARTICLES = [
   {
     title: "Article II: The Code of Power",
@@ -446,12 +452,6 @@ const genHint = document.getElementById("genHint");
 function tierFixed(s){
   return (s === "Tier I" || s === "Tier II" || s === "Tier III");
 }
-function tierToValue(t){
-  if (t === "Tier I") return "Tier I";
-  if (t === "Tier II") return "Tier II";
-  if (t === "Tier III") return "Tier III";
-  return "";
-}
 
 function render(){
   lawsScroll.innerHTML = "";
@@ -460,13 +460,11 @@ function render(){
     const details = document.createElement("details");
     details.open = true;
 
-    const total = article.laws.length;
-
     const summary = document.createElement("summary");
     summary.innerHTML = `
       <div class="sumMeta">
         <span>${article.title}</span>
-        <span class="chip">${total} laws</span>
+        <span class="chip">${article.laws.length} laws</span>
       </div>
       <span class="chip">toggle</span>
     `;
@@ -479,7 +477,6 @@ function render(){
       const row = document.createElement("div");
       row.className = "lawRow";
 
-      // checkbox + pretty check
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.id = `cb_${id}`;
@@ -487,12 +484,11 @@ function render(){
 
       const check = document.createElement("div");
       check.className = "check";
-      check.title = "Select law";
       check.onclick = () => { cb.checked = !cb.checked; updateCounts(); };
 
-      // title/desc
       const main = document.createElement("div");
       main.className = "lawMain";
+      main.onclick = () => { cb.checked = !cb.checked; updateCounts(); };
 
       const title = document.createElement("div");
       title.className = "lawTitle";
@@ -509,7 +505,6 @@ function render(){
       main.appendChild(title);
       main.appendChild(desc);
 
-      // tier selector
       const tierBox = document.createElement("div");
       tierBox.className = "tierBox";
 
@@ -526,16 +521,10 @@ function render(){
         <option value="Tier III">Tier III</option>
       `;
 
-      // preselect if fixed tier
-      if (tierFixed(law.suggested)) {
-        tierSel.value = tierToValue(law.suggested);
-      }
+      if (tierFixed(law.suggested)) tierSel.value = law.suggested;
 
       tierBox.appendChild(tierLab);
       tierBox.appendChild(tierSel);
-
-      // clicking label toggles checkbox too
-      main.onclick = () => { cb.checked = !cb.checked; updateCounts(); };
 
       cb.addEventListener("change", updateCounts);
 
@@ -559,14 +548,10 @@ function getSelected(){
   const selected = [];
   document.querySelectorAll('input[type="checkbox"][data-code]').forEach(cb => {
     if (cb.checked) {
-      // Find its tier select by walking siblings
       const row = cb.parentElement;
       const tierSel = row.querySelector("select");
       const code = cb.dataset.code;
-
-      // grab name from title text
       const name = row.querySelector(".lawTitle span:nth-child(2)")?.textContent || "";
-
       selected.push({ code, name, tier: tierSel.value });
     }
   });
@@ -577,10 +562,9 @@ function updateCounts(){
   const selected = getSelected();
   selectedHint.textContent = `${selected.length} laws selected`;
 
-  // show warning if any selected missing tier
   const missing = selected.filter(x => !x.tier);
   if (missing.length){
-    genHint.innerHTML = `<span class="warn">Missing tier for ${missing.length} selected law(s). Choose Tier I/II/III.</span>`;
+    genHint.innerHTML = `<span class="warn">Missing tier for ${missing.length} selected law(s).</span>`;
   } else {
     genHint.textContent = "";
   }
@@ -595,33 +579,41 @@ function formatTodayISO(){
 }
 
 function generateMessage(){
+  const arresterUser = document.getElementById("arresterUser").value.trim();
+  const arresterName = document.getElementById("arresterName").value.trim();
+  const arresterRank = document.getElementById("arresterRank").value.trim();
+
   const evader = document.getElementById("evader").value.trim();
   const evaderRank = document.getElementById("evaderRank").value.trim();
-  const officer = document.getElementById("officer").value.trim();
   const date = document.getElementById("eventDate").value;
+
   const summary = document.getElementById("summary").value.trim();
   const evidence = document.getElementById("evidence").value.trim();
 
   const selected = getSelected();
   const missing = selected.filter(x => !x.tier);
-
   if (missing.length){
     genHint.innerHTML = `<span class="warn">Can’t generate: select Tier I/II/III for every checked law.</span>`;
     return;
   }
 
   const lawsLine = selected.map(x => `${x.code}: ${x.name}`).join("; ");
-  const tiersLine = selected.map(x => x.tier).filter(Boolean);
-  const uniqueTiers = [...new Set(tiersLine)].join(", ");
+  const tiersLine = [...new Set(selected.map(x => x.tier))].join(", ");
 
   const msg =
-`Law evader username: ${evader}
+`Arrester's username: ${arresterUser}
+Arrester's name: ${arresterName}
+Arrester’s DCoJ rank: ${arresterRank}
+
+Law evader username: ${evader}
 Law evader rank: ${evaderRank}
 Date of the event: ${date}
+
 Law(s) broken: ${lawsLine}
-Tier(s): ${uniqueTiers}
+Tier(s): ${tiersLine}
+
 Summary of event: ${summary}
-Evidence: ${evidence}${officer ? `\n\nOfficer: ${officer}` : ""}`.trimEnd();
+Evidence: ${evidence}`.trimEnd();
 
   document.getElementById("output").value = msg;
   genHint.textContent = "Generated.";
@@ -634,10 +626,8 @@ async function copyOutput(){
   try{
     await navigator.clipboard.writeText(out);
   }catch{
-    // fallback
     const ta = document.getElementById("output");
-    ta.focus();
-    ta.select();
+    ta.focus(); ta.select();
     document.execCommand("copy");
   }
   showToast("Copy successful");
@@ -653,7 +643,6 @@ function showToast(text){
 document.getElementById("genBtn").addEventListener("click", generateMessage);
 document.getElementById("copyBtn").addEventListener("click", copyOutput);
 
-// init
 document.getElementById("eventDate").value = formatTodayISO();
 render();
 </script>
